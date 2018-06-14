@@ -1,6 +1,5 @@
-﻿@using AllReady.Constants
+@using AllReady.Constants
 @model AllReady.Areas.Admin.ViewModels.Organization.OrganizationEditViewModel
-
 @{
     var isEdit = Model != null && Model.Id > 0;
     string actionTitle;
@@ -19,6 +18,32 @@
     }
 }
 
+@section styles{
+    <style>
+        #image-wrapper {
+            display: inline-block;
+            position: relative;
+        }
+
+        #image-wrapper button {
+            display: none;
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+
+        #image-wrapper:hover img {
+            opacity: 0.5;
+        }
+
+        #image-wrapper:hover button {
+            z-index: 999;
+            display: block;
+        }
+    </style>
+
+
+}
 <div class="row">
     <div class="col-12">
         <ol class="breadcrumb">
@@ -32,37 +57,66 @@
             {
                 <li>Create New Organization</li>
             }
-
         </ol>
-
     </div>
 </div>
-
 <div class="row">
     <div class="col-md-12">
         <h2>@ViewData["Title"]</h2>
     </div>
 </div>
-
-<form asp-controller="Organization" asp-area="@AreaNames.Admin" asp-action="Edit" method="post">
+<form asp-controller="Organization" asp-area="@AreaNames.Admin" asp-action="Edit" method="post" enctype="multipart/form-data">
     <div class="form-horizontal">
         <hr />
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
         @if (isEdit)
         {
             <input type="hidden" asp-for="Id" />
         }
-        
-        <h3>Organization Information</h3>
 
-        <div class="form-group">
-            <label asp-for="LogoUrl" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="LogoUrl" class="form-control" />
-                <span asp-validation-for="LogoUrl" class="text-danger"></span>
-            </div>
+        <h3>Organization Information</h3>
+        <div class="form-horizontal">
+            @if (!string.IsNullOrWhiteSpace(Model.LogoUrl)) //TODO: retrieve logoUrl when setting up the Model 
+            {
+
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-4">
+
+                        <div class="alert campaign-image-status-alert" style="display: none;">
+
+                        </div>
+
+                        <div class="panel panel-default" id="image-panel-container">
+                            <div class="panel-heading">
+                                <label asp-for="LogoUrl"></label>
+                            </div>
+                            <div class="panel-body" id="image-panel-body">
+                                <div id="image-wrapper">
+                                    <button class="btn btn-danger" id="delete-image">Delete Image</button>
+                                    <img src="@Model.LogoUrl" class="img-responsive center-block" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        
+                <div class="form-group">
+                    <label asp-for="FileUpload" class="col-md-2 control-label"></label>
+                    <div class="col-md-10">
+                        <div class="form-group">
+                            <div class="col-md-10">
+                                <input type="file" asp-for="FileUpload" class="control-label col-md-4" />
+                                <span asp-validation-for="FileUpload" class="text-danger col-md-12"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+
         </div>
+        <hr />
         <div class="form-group">
             <label asp-for="Name" class="col-md-2 control-label"></label>
             <div class="col-md-10">
@@ -73,11 +127,10 @@
         <div class="form-group">
             <label asp-for="WebUrl" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="WebUrl" class="form-control"/>
+                <input asp-for="WebUrl" class="form-control" />
                 <span asp-validation-for="WebUrl" class="text-danger"></span>
             </div>
         </div>
-
         <div class="form-group">
             <label asp-for="Summary" class="col-md-2 control-label"></label>
             <div class="col-md-10">
@@ -85,7 +138,6 @@
                 <span asp-validation-for="Summary" class="text-danger"></span>
             </div>
         </div>
-
         <div class="form-group">
             <div class="control-label col-md-2">
                 <label asp-for="Description"></label>
@@ -113,13 +165,9 @@
                 <span asp-validation-for="PrivacyPolicy" class="text-danger"></span>
             </div>
         </div>
-
         <h3>Location</h3>
-
         @Html.EditorFor(m => m.Location)
-
         <h3>Primary Contact</h3>
-
         <div class="form-group">
             <label asp-for="PrimaryContactFirstName" class="col-md-2 control-label"></label>
             <div class="col-md-10">
@@ -156,3 +204,18 @@
         </div>
     </div>
 </form>
+@section scripts {
+    <script src="~/js/campaignadmin.js"></script>
+    <script src="~/lib/system.js/dist/system.js"></script>
+
+    <script>
+        SystemJS.config({
+            baseURL: '/js/Admin/Campaign/Edit',
+            defaultJSExtensions: true
+        });
+
+        SystemJS.import('Main');
+    </script>
+
+
+}

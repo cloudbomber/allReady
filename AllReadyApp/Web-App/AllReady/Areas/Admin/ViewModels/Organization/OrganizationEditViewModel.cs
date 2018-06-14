@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using AllReady.Areas.Admin.ViewModels.Shared;
 
 namespace AllReady.Areas.Admin.ViewModels.Organization
@@ -10,8 +10,11 @@ namespace AllReady.Areas.Admin.ViewModels.Organization
         [Required]
         public string Name { get; set; }
 
-        [Display(Name = "Logo URL")]
+        [Display(Name = "Exisiting Logo")]
         public string LogoUrl { get; set; }
+
+        [Display(Name = "Browse for image")]
+        public string FileUpload { get; set; }
 
         [Display(Name = "Website URL")]
         public string WebUrl { get; set; }
